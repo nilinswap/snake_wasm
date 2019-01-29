@@ -1,0 +1,1 @@
+{"rustc":0,"features":"","target":0,"profile":0,"path":0,"deps":[],"local":[{"MtimeBased":[[1548788224,820846203],"/Users/swapnil/forgit/snake_wasm/target/wasm32-unknown-unknown/release/build/web-sys-987b82a98d85c9f0/output"]},{"EnvBased":["__WASM_BINDGEN_DUMP_FEATURES",null]},{"EnvBased":["WEBIDL_RUSTFMT_BINDINGS",null]}],"rustflags":[],"edition":"Edition2015"}
