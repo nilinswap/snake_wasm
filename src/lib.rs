@@ -2,12 +2,9 @@ extern crate cfg_if;
 extern crate wasm_bindgen;
 
 mod utils;
-pub mod universe;
-pub mod cell;
+
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
-
-
 
 cfg_if! {
     // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -19,13 +16,12 @@ cfg_if! {
     }
 }
 
-
-
 #[wasm_bindgen]
-pub fn get_universe() -> universe::Universe {
-    let univer = universe::Universe::new();
-    //println!("{}", univer);
-    univer
-
+extern {
+    fn alert(s: &str);
 }
 
+#[wasm_bindgen]
+pub fn greet() {
+    alert("Hello, slfkj!");
+}
