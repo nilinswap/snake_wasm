@@ -1,8 +1,10 @@
 extern crate cfg_if;
 extern crate wasm_bindgen;
-
 mod utils;
-
+pub mod cell;
+pub mod pos;
+pub mod snake;
+pub mod board;
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 
@@ -22,6 +24,18 @@ extern {
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, slfkj!");
+pub fn greet(st: String) {
+    alert(st.as_str());
+}
+
+
+#[wasm_bindgen]
+pub fn make_snake(){
+    let snake_obj = snake::Snake::new();
+}
+
+#[wasm_bindgen]
+pub fn make_board() -> String{
+    let board_bj = board::Board::new(64, 64);
+    board_bj.render()
 }

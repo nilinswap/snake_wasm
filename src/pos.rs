@@ -1,11 +1,16 @@
-struct Position{
-    x: u32,
-    y: u32,
+pub struct Position{
+    pub x: u32,
+    pub y: u32,
 }
 
 impl Position{
-    pub fn new() -> Self{}
-    pub fn get_index(){}
+    pub fn new(x: u32, y: u32) -> Self{
+        Position{
+            x,
+            y,
+        }
+    }
+
     pub fn is_candy(){}
 
 }
