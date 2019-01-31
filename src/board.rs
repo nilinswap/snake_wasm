@@ -1,7 +1,10 @@
 use cell;
 use pos;
 use snake;
+extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 pub struct Board{
     width: u32,
     length: u32,
@@ -11,7 +14,7 @@ pub struct Board{
 }
 
 
-
+#[wasm_bindgen]
 impl Board{
 
     pub fn new(width: u32, length: u32) -> Self{
@@ -34,12 +37,26 @@ impl Board{
         Board{
             width,
             length,
-            candy_pos: pos::Position{x: 30, y:30,},
+            candy_pos: candy_pos,
             cell_vec: vector,
             snake: snake,
         }
     }
     pub fn tick(){}
+
+    pub fn cells(&self) -> *const cell::Cell{
+        self.cell_vec.as_ptr()
+    }
+    pub fn width(&self) -> u32{
+        self.width
+    }
+    pub fn length(&self) -> u32{
+        self.length
+    }
+
+}
+
+impl Board{
     pub fn get_index(&self, position : pos::Position) -> usize{
         (position.x*self.width + position.y) as usize
     }
