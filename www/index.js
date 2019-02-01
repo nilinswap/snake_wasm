@@ -85,8 +85,27 @@ const drawCells = () => {
 let animationId = null;
 
 
+
+document.addEventListener('keydown', function(event){
+        switch (event.key) {
+            case "ArrowLeft":
+                board.snake_change_dir(1);
+                break;
+            case "ArrowRight":
+                board.snake_change_dir(3);
+                break;
+            case "ArrowUp":
+                board.snake_change_dir(0);
+                break;
+            case "ArrowDown":
+                board.snake_change_dir(2);
+                break;
+        }
+} );
  const renderLoop = () => {
   //debugger;
+
+
   board.tick();
     sleep(1);
   drawCells();
@@ -96,5 +115,6 @@ let animationId = null;
 /*
 */
 renderLoop();
+
 
 

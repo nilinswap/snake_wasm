@@ -43,11 +43,13 @@ impl Board{
         }
     }
     pub fn tick(&mut self){
+        //get tail end pos and make it null as snake moved one cell
         let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
         let idx = self.get_index(last_pos);
         self.cell_vec[idx] = cell::Cell::Null;
         self.snake.move_next(self.width, self.length);
 
+        //redraw the snake on cell_vec
         let mut flag = true;
         for pos in &self.snake.body_pos_vec{
             let cloned_pos = pos.clone();
@@ -63,6 +65,7 @@ impl Board{
 
         }
 
+
     }
 
     pub fn cells(&self) -> *const cell::Cell{
@@ -73,6 +76,9 @@ impl Board{
     }
     pub fn length(&self) -> u32{
         self.length
+    }
+    pub fn snake_change_dir(&mut self,direction: snake::Direction){
+        self.snake.change_dir(direction);
     }
 
 }
