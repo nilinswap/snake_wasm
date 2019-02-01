@@ -48,7 +48,7 @@ const drawCells = () => {
 		for (let col = 0; col < width; col++){
 			const idx = getIndex(row, col);
 
-            console.log(cells[idx]);
+            //console.log(cells[idx]);
 			switch( cells[idx] ){
 			    case 1:{
 
@@ -67,7 +67,7 @@ const drawCells = () => {
 			        ctx.fillStyle = NULL_COLOR;
 			        break;
 			       }
-			    console.log(ctx.fillStyle);
+			    //console.log(ctx.fillStyle);
 
 			};
 			ctx.fillRect(
@@ -82,9 +82,19 @@ const drawCells = () => {
 };
 
 
-drawCells();
+let animationId = null;
+
+
+ const renderLoop = () => {
+  //debugger;
+  board.tick();
+    sleep(100);
+  drawCells();
+
+   animationId = requestAnimationFrame(renderLoop);
+};
 /*
 */
-
+renderLoop();
 
 

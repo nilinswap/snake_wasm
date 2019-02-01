@@ -42,7 +42,28 @@ impl Board{
             snake: snake,
         }
     }
-    pub fn tick(){}
+    pub fn tick(&mut self){
+        let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
+        let idx = self.get_index(last_pos);
+        self.cell_vec[idx] = cell::Cell::Null;
+        self.snake.move_next(self.width, self.length);
+
+        let mut flag = true;
+        for pos in &self.snake.body_pos_vec{
+            let cloned_pos = pos.clone();
+            let idx = self.get_index(cloned_pos);
+            if flag{
+                self.cell_vec[idx] = cell::Cell::Head;
+                flag = false;
+            }
+            else{
+                self.cell_vec[idx] = cell::Cell::Tail;
+            }
+
+
+        }
+
+    }
 
     pub fn cells(&self) -> *const cell::Cell{
         self.cell_vec.as_ptr()
