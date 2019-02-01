@@ -88,7 +88,7 @@ let animationId = null;
  const renderLoop = () => {
   //debugger;
   board.tick();
-    sleep(100);
+    sleep(1);
   drawCells();
 
    animationId = requestAnimationFrame(renderLoop);
