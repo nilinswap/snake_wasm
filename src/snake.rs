@@ -64,7 +64,7 @@ impl Snake{
                     position
 				 );
        }*/
-        self.body_pos_vec.pop();
+
         self.body_pos_vec.insert(0, next_head);
 
        /*for position in &self.body_pos_vec{
@@ -75,11 +75,31 @@ impl Snake{
        }*/
 
     }
-    /*
-    fn tail_increase(&mut self){}
-    pub fn is_biting_itself( &mut self){}
-    pub fn is_biting_candy( &mut self) {}
-    */
+
+    pub fn is_biting_itself( & self) -> bool{
+        match self.direction{
+            Direction::Up    => self.body_pos_vec.contains( &pos::Position::new(self.body_pos_vec[0].x - 1, self.body_pos_vec[0].y )),
+            Direction::Right => self.body_pos_vec.contains( &pos::Position::new(self.body_pos_vec[0].x , self.body_pos_vec[0].y-1 )),
+            Direction::Down  => self.body_pos_vec.contains( &pos::Position::new(self.body_pos_vec[0].x + 1, self.body_pos_vec[0].y )),
+            Direction::Left  => self.body_pos_vec.contains( &pos::Position::new(self.body_pos_vec[0].x , self.body_pos_vec[0].y+1 )),
+        }
+    }
+    pub fn is_biting_candy( &self, candy_pos: pos::Position) -> bool {
+        match self.direction{
+            Direction::Up    => (self.body_pos_vec[0].x - candy_pos.x ) == 1 && (candy_pos.y == self.body_pos_vec[0].y),
+            Direction::Right => (candy_pos.x == self.body_pos_vec[0].x) && (candy_pos.y - self.body_pos_vec[0].y == 1),
+            Direction::Down  => (candy_pos.x - self.body_pos_vec[0].x) == 1 && (candy_pos.y == self.body_pos_vec[0].y),
+            Direction::Left => (candy_pos.x == self.body_pos_vec[0].x) && ( self.body_pos_vec[0].y - candy_pos.y == 1),
+        }
+    }
+
+    pub fn head(&self) -> pos::Position{
+        self.body_pos_vec[0]
+    }
+
+    pub fn tailend(&self) -> pos::Position{
+        *self.body_pos_vec.last().unwrap()
+    }
 
 
 }

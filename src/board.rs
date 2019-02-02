@@ -3,6 +3,20 @@ use pos;
 use snake;
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
+use rand::prelude::*;
+extern crate web_sys;
+
+// A macro to provide `println!(..)`-style syntax for `console.log` logging.
+macro_rules! log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
+
+#[wasm_bindgen]
+extern {
+    fn alert(s: &str);
+}
 
 #[wasm_bindgen]
 pub struct Board{
@@ -11,6 +25,7 @@ pub struct Board{
     candy_pos: pos::Position,
     cell_vec: Vec< cell::Cell >,
     snake: snake::Snake,
+    score: u64,
 }
 
 
@@ -40,13 +55,54 @@ impl Board{
             candy_pos: candy_pos,
             cell_vec: vector,
             snake: snake,
+            score: 0,
         }
     }
     pub fn tick(&mut self){
-        //get tail end pos and make it null as snake moved one cell
-        let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
-        let idx = self.get_index(last_pos);
-        self.cell_vec[idx] = cell::Cell::Null;
+        if self.is_snake_biting_itself(){
+
+            alert(&format!("game over!\nyour score: {}", self.score));
+            {
+                let width = self.width;
+                let length = self.length;
+                let mut vector = vec![cell::Cell::Null; (width*length) as usize];
+                let snaKe = snake::Snake::new();
+                let candy_pos = pos::Position::new(20, 20);
+                let mut flag = true;
+                for pos in &snaKe.body_pos_vec{
+                    if flag{
+                        vector[(pos.x*width + pos.y) as usize] = cell::Cell::Head;
+                        flag = false;
+                    }
+                    else{
+                        vector[(pos.x*width + pos.y) as usize] = cell::Cell::Tail;
+                    }
+
+
+                }
+                vector[(candy_pos.x*width + candy_pos.y) as usize] = cell::Cell::Candy;
+                self.candy_pos = candy_pos;
+            self.cell_vec = vector;
+            self.snake = snaKe;
+            self.score= 0;
+            }
+
+
+        }
+
+        if !self.is_snake_biting_candy() { // so is snake is eating candy, its size increases
+            //get tail end pos and make it null as snake moved one cell
+            let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
+            let idx = self.get_index(last_pos);
+            self.cell_vec[idx] = cell::Cell::Null;
+            self.snake.body_pos_vec.pop();
+        }
+        else{
+         self.generate_new_candy();
+         self.score += 1;
+            log!("{}", self.score);
+
+        }
         self.snake.move_next(self.width, self.length);
 
         //redraw the snake on cell_vec
@@ -64,6 +120,7 @@ impl Board{
 
 
         }
+        //log!("{:?}", self.candy_pos);
 
 
     }
@@ -77,19 +134,45 @@ impl Board{
     pub fn length(&self) -> u32{
         self.length
     }
+    pub fn score(&self) -> u32{
+        self.score as u32
+    }
     pub fn snake_change_dir(&mut self,direction: snake::Direction){
         self.snake.change_dir(direction);
     }
 
+
 }
 
 impl Board{
+    pub fn is_snake_biting_itself(&self)-> bool{
+        self.snake.is_biting_itself()
+    }
     pub fn get_index(&self, position : pos::Position) -> usize{
         (position.x*self.width + position.y) as usize
     }
 	pub fn render(&self) -> String{
 		self.to_string()
 	}
+    pub fn is_snake_biting_candy(&self) -> bool{
+        self.snake.is_biting_candy(self.candy_pos)
+    }
+    pub fn generate_new_candy(&mut self){// somehow rand doesn't work all fine with wasm
+        //let mut rng = rand::thread_rng();
+        let mut x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
+        let mut y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+        let mut position= pos::Position{x, y};
+        while self.snake.body_pos_vec.contains(&position) || (position.x == 0 && position.y == 0){
+            let mut x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
+            let mut y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+            let mut position= pos::Position{x, y};
+        }
+
+        self.candy_pos = position;
+        let idx = self.get_index(self.candy_pos);
+        self.cell_vec[idx] = cell::Cell::Candy;
+
+    }
 }
 
 

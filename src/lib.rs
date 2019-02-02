@@ -1,5 +1,6 @@
 extern crate cfg_if;
 extern crate wasm_bindgen;
+extern crate rand;
 mod utils;
 pub mod cell;
 pub mod pos;

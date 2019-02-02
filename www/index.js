@@ -5,7 +5,7 @@ import {memory} from "snake-wasm/snake_wasm_bg";
 
 
 
-const CELL_SIZE = 5; // px
+const CELL_SIZE = 10; // px
 const NULL_COLOR  = "#CCCCCC";
 const HEAD_COLOR  = "#0000FF";
 const TAIL_COLOR  = "#00CCFF";
@@ -102,12 +102,17 @@ document.addEventListener('keydown', function(event){
                 break;
         }
 } );
+
+
+var score_element = document.getElementById("score");
  const renderLoop = () => {
   //debugger;
 
 
   board.tick();
-    sleep(1);
+  //console.log(board.score());
+    score_element.textContent = board.score();
+    sleep(100);
   drawCells();
 
    animationId = requestAnimationFrame(renderLoop);
