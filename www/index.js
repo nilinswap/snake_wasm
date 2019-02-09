@@ -60,7 +60,7 @@ const drawCells = () => {
 
 	ctx.stroke();
 };
-console.log(board.snake);
+//console.log(board.snake);
 
 let animationId = null;
 
@@ -92,9 +92,9 @@ function updateBoard(){
 
     //console.log(board.update_body);
     //remove tail end
-    var row = board.update_body.old_tail_end_pos.x;
+    var row = board.update_body().old_tail_end_pos().x();
 
-    var col = board.update_body.old_tail_end_pos.y;
+    var col = board.update_body().old_tail_end_pos().y();
 
     ctx.fillStyle = NULL_COLOR;
     ctx.fillRect(
@@ -108,8 +108,8 @@ function updateBoard(){
 
 
     //mark candy
-	var old_row = board.update_body.new_candy_pos_update.old_position.x;
-    var old_col = board.update_body.new_candy_pos_update.old_position.y;
+	var old_row = board.update_body().new_candy_pos_update().old_position().x();
+    var old_col = board.update_body().new_candy_pos_update().old_position().y();
 
     ctx.fillStyle = NULL_COLOR;
     ctx.fillRect(
@@ -120,8 +120,8 @@ function updateBoard(){
 			);
 
 
-	var new_row = board.update_body.new_candy_pos_update.new_position.x;
-	var new_col = board.update_body.new_candy_pos_update.new_position.y;
+	var new_row = board.update_body().new_candy_pos_update().new_position().x();
+	var new_col = board.update_body().new_candy_pos_update().new_position().y();
 
     ctx.fillStyle = CANDY_COLOR;
     ctx.fillRect(
@@ -133,8 +133,8 @@ function updateBoard(){
 
 
 	//mark head
-	var old_row = board.update_body.new_head_pos_update.old_position.x;
-    var old_col = board.update_body.new_head_pos_update.old_position.y;
+	var old_row = board.update_body().new_head_pos_update().old_position().x();
+    var old_col = board.update_body().new_head_pos_update().old_position().y();
 
     ctx.fillStyle = TAIL_COLOR;
     ctx.fillRect(
@@ -145,8 +145,8 @@ function updateBoard(){
 			);
 
 
-	var new_row = board.update_body.new_head_pos_update.new_position.x;
-	var new_col = board.update_body.new_head_pos_update.new_position.y;
+	var new_row = board.update_body().new_head_pos_update().new_position().x();
+	var new_col = board.update_body().new_head_pos_update().new_position().y();
 
     ctx.fillStyle = HEAD_COLOR;
     ctx.fillRect(

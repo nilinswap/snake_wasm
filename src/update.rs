@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::*;
 
 use pos;
 
-#[wasm_bindgen]
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PositionUpdate{
     pub old_position: pos::Position,
@@ -24,11 +24,11 @@ impl PositionUpdate{
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Update{
-    pub new_head_pos_update: PositionUpdate,
+     new_head_pos_update: PositionUpdate,
 
-    pub old_tail_end_pos: pos::Position,
+     old_tail_end_pos: pos::Position,
 
-    pub new_candy_pos_update: PositionUpdate
+     new_candy_pos_update: PositionUpdate
 
 }
 
@@ -40,6 +40,31 @@ impl Update{
             old_tail_end_pos: start_tail_end_pos,
             new_candy_pos_update: PositionUpdate::new(start_candy_pos, start_candy_pos),
         }
+    }
+
+    pub fn set_old_tail_end_pos(&mut self, position: pos::Position){
+        self.old_tail_end_pos = position;
+    }
+
+    pub fn set_new_head_pos_update(&mut self, old_position: pos::Position, new_position: pos::Position){
+        self.new_head_pos_update = PositionUpdate::new(old_position, new_position);
+    }
+
+    pub fn set_new_candy_pos_update(&mut self, old_position: pos::Position, new_position: pos::Position){
+        self.new_candy_pos_update = PositionUpdate::new(old_position, new_position);
+    }
+    //pub fn set_new_head_pos_update(&mut self, )
+    
+    pub fn old_tail_end_pos(&mut self, position: pos::Position) -> pos::Position{
+        self.old_tail_end_pos
+    }
+
+    pub fn new_head_pos_update(&mut self, old_position: pos::Position, new_position: pos::Position) -> PositionUpdate{
+        self.new_head_pos_update
+    }
+
+    pub fn new_candy_pos_update(&mut self, old_position: pos::Position, new_position: pos::Position) -> PositionUpdate{
+        self.new_candy_pos_update
     }
 
 }

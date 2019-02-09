@@ -12,7 +12,6 @@ macro_rules! log {
 }
 
 
-
 //#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
 #[wasm_bindgen]
@@ -30,8 +29,8 @@ pub enum Direction{
 }*/
 
 pub struct Snake{
-    pub direction: Direction,
-    pub body_pos_vec: Vec<pos::Position>,
+     direction: Direction,
+     body_pos_vec: Vec<pos::Position>,
 }
 
 impl Snake{
@@ -104,7 +103,13 @@ impl Snake{
     }
 
 
+    pub fn contains_in_body(&self, position: pos::Position) -> bool{
+        self.body_pos_vec.contains(&position) 
+    }
 
+    pub fn pop_tailend(&mut self) -> Option<pos::Position>{
+        self.body_pos_vec.pop()
+    }
 
 }
 

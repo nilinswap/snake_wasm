@@ -25,7 +25,7 @@ pub struct Board{
     candy_pos: pos::Position,
     snake: snake::Snake,
     score: u64,
-    pub update_body: update::Update,
+    update_body: update::Update,
 }
 
 
@@ -40,7 +40,7 @@ impl Board{
 
 
 
-        let update_body = update::Update::new(snake.body_pos_vec[0], *snake.body_pos_vec.last().unwrap(), candy_pos);
+        let update_body = update::Update::new(snake.head(), snake.tailend(), candy_pos);
         //log!("{:?}", snake.body_pos_vec.last());
         Board{
             width,
@@ -66,7 +66,7 @@ impl Board{
 
             self.snake = snaKe;
             self.score= 0;
-            self.update_body = update::Update::new(self.snake.body_pos_vec[0], *self.snake.body_pos_vec.last().unwrap(), candy_pos);
+            self.update_body = update::Update::new(self.snake.head(), self.snake.tailend(), candy_pos);
 
             }
             return true;
@@ -76,20 +76,21 @@ impl Board{
 
 
 
-        if !self.is_snake_biting_candy() { // so is snake is eating candy, its size increases
+        if !self.is_snake_biting_candy() { // so if snake is eating candy, its size increases
             //get tail end pos and make it null as snake moved one cell
     
-            match self.snake.body_pos_vec.pop(){
+            match self.snake.pop_tailend(){
                 //update for tailend fade
 
-                Some(pos_obj) => self.update_body.old_tail_end_pos = pos_obj,
+                Some(pos_obj) => self.update_body.set_old_tail_end_pos(pos_obj),
                 None => unimplemented!(),
             };
-            self.update_body.new_candy_pos_update = update::PositionUpdate::new( self.candy_pos, self.candy_pos);
+            self.update_body.set_new_candy_pos_update( self.candy_pos, self.candy_pos);
 
         }
         else{
-         self.update_body.new_candy_pos_update = update::PositionUpdate::new( self.candy_pos, self.generate_new_candy());
+         let new_candy_pos = self.generate_new_candy();
+         self.update_body.set_new_candy_pos_update( self.candy_pos, new_candy_pos);
 
          self.score += 1;
             log!("{}", self.score);
@@ -97,7 +98,7 @@ impl Board{
 
         }
 
-        self.update_body.new_head_pos_update = update::PositionUpdate::new( self.snake.body_pos_vec[0], self.snake.move_next(self.width, self.length));
+        self.update_body.set_new_head_pos_update( self.snake.head(), self.snake.move_next(self.width, self.length));
 
         return false
 
@@ -118,7 +119,12 @@ impl Board{
     pub fn snake_change_dir(&mut self,direction: snake::Direction){
         self.snake.change_dir(direction);
     }
-
+    pub fn set_candy_pos(&mut self, position: pos::Position){
+        self.candy_pos = position;
+    }
+    pub fn update_body( &self ) -> update::Update{
+        self.update_body
+    }
 
 }
 
@@ -127,7 +133,7 @@ impl Board{
         self.snake.is_biting_itself()
     }
     pub fn get_index(&self, position : pos::Position) -> usize{
-        (position.x*self.width + position.y) as usize
+        (position.x()*self.width + position.y()) as usize
     }
     /* RIP render
 	pub fn render(&self) -> String{
@@ -139,16 +145,16 @@ impl Board{
     }
     pub fn generate_new_candy(&mut self) -> pos::Position{// somehow rand doesn't work all fine with wasm
         //let mut rng = rand::thread_rng();
-        let  x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
-        let  y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+        let  x: u32 = (self.snake.head().x() * self.snake.tailend().y() ) % (self.length() - 7);
+        let  y: u32 = (self.snake.head().y() * self.snake.tailend().x())  %(self.width() - 7);
         let mut position= pos::Position{x, y};
-        while self.snake.body_pos_vec.contains(&position) || (position.x == 0 && position.y == 0){
-            let  x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
-            let  y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+        while self.snake.contains_in_body(position) || (position.x == 0 && position.y == 0){
+            let  x: u32 = (self.snake.head().x() * self.snake.tailend().y() ) % (self.length()- 7);
+            let  y: u32 = (self.snake.head().y() * self.snake.tailend().x())  %(self.width() - 7);
             position= pos::Position{x, y};
         }
 
-        self.candy_pos = position;
+        self.set_candy_pos(position);
 
         position
 

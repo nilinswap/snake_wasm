@@ -16,6 +16,18 @@ impl Position{
         }
     }
 
-    pub fn is_candy(){}
+    pub fn set_x(&mut self, x: u32){
+        self.x = x;
+    }
+
+    pub fn x(&self) -> u32{
+        self.x
+    }
+    pub fn y(&self) -> u32{
+        self.y
+    }
+    pub fn set_y(&mut self, y: u32){
+        self.y = y;
+    }
 
 }
