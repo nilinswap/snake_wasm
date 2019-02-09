@@ -1,4 +1,4 @@
-use cell;
+
 use pos;
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;

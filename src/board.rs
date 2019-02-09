@@ -1,9 +1,8 @@
-use cell;
+
 use pos;
 use snake;
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
-use rand::prelude::*;
 extern crate web_sys;
 use update;
 
@@ -58,8 +57,6 @@ impl Board{
 
             alert(&format!("game over!\nyour score: {}", self.score));
             {
-                let width = self.width;
-                let length = self.length;
 
                 let snaKe = snake::Snake::new();
                 let candy_pos = pos::Position::new(20, 20);
@@ -81,10 +78,10 @@ impl Board{
 
         if !self.is_snake_biting_candy() { // so is snake is eating candy, its size increases
             //get tail end pos and make it null as snake moved one cell
-            let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
-            let idx = self.get_index(last_pos);
-
+    
             match self.snake.body_pos_vec.pop(){
+                //update for tailend fade
+
                 Some(pos_obj) => self.update_body.old_tail_end_pos = pos_obj,
                 None => unimplemented!(),
             };
@@ -142,13 +139,13 @@ impl Board{
     }
     pub fn generate_new_candy(&mut self) -> pos::Position{// somehow rand doesn't work all fine with wasm
         //let mut rng = rand::thread_rng();
-        let mut x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
-        let mut y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+        let  x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
+        let  y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
         let mut position= pos::Position{x, y};
         while self.snake.body_pos_vec.contains(&position) || (position.x == 0 && position.y == 0){
-            let mut x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
-            let mut y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
-            let mut position= pos::Position{x, y};
+            let  x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
+            let  y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
+            position= pos::Position{x, y};
         }
 
         self.candy_pos = position;

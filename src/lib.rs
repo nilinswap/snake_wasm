@@ -31,8 +31,5 @@ pub fn greet(st: String) {
 }
 
 
-#[wasm_bindgen]
-pub fn make_snake(){
-    let snake_obj = snake::Snake::new();
-}
+
 
