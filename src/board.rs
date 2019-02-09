@@ -24,7 +24,6 @@ pub struct Board{
     width: u32,
     length: u32,
     candy_pos: pos::Position,
-    cell_vec: Vec< cell::Cell >,
     snake: snake::Snake,
     score: u64,
     pub update_body: update::Update,
@@ -35,29 +34,19 @@ pub struct Board{
 impl Board{
 
     pub fn new(width: u32, length: u32) -> Self{
-        let mut vector = vec![cell::Cell::Null; (width*length) as usize];
+
+
         let snake = snake::Snake::new();
         let candy_pos = pos::Position::new(20, 20);
-        let mut flag = true;
-        for pos in &snake.body_pos_vec{
-            if flag{
-                vector[(pos.x*width + pos.y) as usize] = cell::Cell::Head;
-                flag = false;
-            }
-            else{
-                vector[(pos.x*width + pos.y) as usize] = cell::Cell::Tail;
-            }
 
 
-        }
-        vector[(candy_pos.x*width + candy_pos.y) as usize] = cell::Cell::Candy;
+
         let update_body = update::Update::new(snake.body_pos_vec[0], *snake.body_pos_vec.last().unwrap(), candy_pos);
         //log!("{:?}", snake.body_pos_vec.last());
         Board{
             width,
             length,
             candy_pos: candy_pos,
-            cell_vec: vector,
             snake: snake,
             score: 0,
             update_body,
@@ -71,24 +60,13 @@ impl Board{
             {
                 let width = self.width;
                 let length = self.length;
-                let mut vector = vec![cell::Cell::Null; (width*length) as usize];
+
                 let snaKe = snake::Snake::new();
                 let candy_pos = pos::Position::new(20, 20);
-                let mut flag = true;
-                for pos in &snaKe.body_pos_vec{
-                    if flag{
-                        vector[(pos.x*width + pos.y) as usize] = cell::Cell::Head;
-                        flag = false;
-                    }
-                    else{
-                        vector[(pos.x*width + pos.y) as usize] = cell::Cell::Tail;
-                    }
 
 
-                }
-                vector[(candy_pos.x*width + candy_pos.y) as usize] = cell::Cell::Candy;
                 self.candy_pos = candy_pos;
-            self.cell_vec = vector;
+
             self.snake = snaKe;
             self.score= 0;
             self.update_body = update::Update::new(self.snake.body_pos_vec[0], *self.snake.body_pos_vec.last().unwrap(), candy_pos);
@@ -105,7 +83,7 @@ impl Board{
             //get tail end pos and make it null as snake moved one cell
             let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
             let idx = self.get_index(last_pos);
-            self.cell_vec[idx] = cell::Cell::Null;
+
             match self.snake.body_pos_vec.pop(){
                 Some(pos_obj) => self.update_body.old_tail_end_pos = pos_obj,
                 None => unimplemented!(),
@@ -124,39 +102,13 @@ impl Board{
 
         self.update_body.new_head_pos_update = update::PositionUpdate::new( self.snake.body_pos_vec[0], self.snake.move_next(self.width, self.length));
 
-
-
-
-
-
-        /*//redraw the snake on cell_vec
-        let mut flag = true;
-        for pos in &self.snake.body_pos_vec{
-            let cloned_pos = pos.clone();
-            let idx = self.get_index(cloned_pos);
-            if flag{
-                self.cell_vec[idx] = cell::Cell::Head;
-                flag = false;
-            }
-            else{
-                self.cell_vec[idx] = cell::Cell::Tail;
-            }
-
-
-        }*/
-
         return false
-        //log!("here {:?}", update_instance);
 
-
-        //log!("{:?}", self.update_body);
 
 
     }
 
-    pub fn cells(&self) -> *const cell::Cell{
-        self.cell_vec.as_ptr()
-    }
+
     pub fn width(&self) -> u32{
         self.width
     }
@@ -180,9 +132,11 @@ impl Board{
     pub fn get_index(&self, position : pos::Position) -> usize{
         (position.x*self.width + position.y) as usize
     }
+    /* RIP render
 	pub fn render(&self) -> String{
 		self.to_string()
 	}
+    */
     pub fn is_snake_biting_candy(&self) -> bool{
         self.snake.is_biting_candy(self.candy_pos)
     }
@@ -198,14 +152,13 @@ impl Board{
         }
 
         self.candy_pos = position;
-        let idx = self.get_index(self.candy_pos);
-        self.cell_vec[idx] = cell::Cell::Candy;
+
         position
 
     }
 }
 
-
+/* RIP display
 use std::fmt;
 impl fmt::Display for Board{
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result{
@@ -233,3 +186,4 @@ impl fmt::Display for Board{
 
 
 }
+*/

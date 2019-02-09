@@ -36,8 +36,3 @@ pub fn make_snake(){
     let snake_obj = snake::Snake::new();
 }
 
-#[wasm_bindgen]
-pub fn make_board() -> String{
-    let board_bj = board::Board::new(64, 64);
-    board_bj.render()
-}
