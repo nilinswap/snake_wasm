@@ -172,17 +172,11 @@ var score_element = document.getElementById("score");
   }
   updateBoard();
 
-  //console.log(board.score());
     score_element.textContent = board.score();
-
-  //drawCells();
-  //updateBoard(update_obj);
-
 
    animationId = requestAnimationFrame(renderLoop);
 };
-/*
-*/
+
 renderLoop();
 
 

@@ -18,6 +18,8 @@ extern {
     fn alert(s: &str);
 }
 
+
+//apply this attribute if struct is exported to JS; also if there is a method that is to be exported, it should have that attribute( over impl block) explicitly.
 #[wasm_bindgen]
 pub struct Board{
     width: u32,

@@ -8,6 +8,7 @@ pub struct Position{
     pub y: u32,
 }
 
+#[wasm_bindgen]
 impl Position{
     pub fn new(x: u32, y: u32) -> Self{
         Position{
@@ -19,15 +20,15 @@ impl Position{
     pub fn set_x(&mut self, x: u32){
         self.x = x;
     }
-
+    pub fn set_y(&mut self, y: u32){
+        self.y = y;
+    }
     pub fn x(&self) -> u32{
         self.x
     }
     pub fn y(&self) -> u32{
         self.y
     }
-    pub fn set_y(&mut self, y: u32){
-        self.y = y;
-    }
+
 
 }
