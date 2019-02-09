@@ -49,7 +49,7 @@ impl Snake{
 
     }
 
-    pub fn move_next(&mut self, width: u32, length: u32){
+    pub fn move_next(&mut self, width: u32, length: u32)  -> pos::Position{
         let now_head = self.body_pos_vec[0].clone();
 
         let next_head = match self.direction{
@@ -67,13 +67,14 @@ impl Snake{
 
         self.body_pos_vec.insert(0, next_head);
 
+        //let p = self.body_pos_vec[0];
        /*for position in &self.body_pos_vec{
            log!(
                     "{:?} ",
                     position
 				 );
        }*/
-
+        next_head
     }
 
     pub fn is_biting_itself( & self) -> bool{

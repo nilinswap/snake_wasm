@@ -112,7 +112,7 @@ var score_element = document.getElementById("score");
   board.tick();
   //console.log(board.score());
     score_element.textContent = board.score();
-    sleep(100);
+    //sleep(100);
   drawCells();
 
    animationId = requestAnimationFrame(renderLoop);

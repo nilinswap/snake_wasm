@@ -5,6 +5,7 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 use rand::prelude::*;
 extern crate web_sys;
+use update;
 
 // A macro to provide `println!(..)`-style syntax for `console.log` logging.
 macro_rules! log {
@@ -58,7 +59,9 @@ impl Board{
             score: 0,
         }
     }
-    pub fn tick(&mut self){
+    pub fn tick(&mut self) -> update::Update{
+        let mut update_instance = update::Update::new();
+        //alert("here");
         if self.is_snake_biting_itself(){
 
             alert(&format!("game over!\nyour score: {}", self.score));
@@ -86,24 +89,39 @@ impl Board{
             self.snake = snaKe;
             self.score= 0;
             }
-
+            return update_instance;
 
         }
+
+
 
         if !self.is_snake_biting_candy() { // so is snake is eating candy, its size increases
             //get tail end pos and make it null as snake moved one cell
             let last_pos = self.snake.body_pos_vec.last().cloned().unwrap();
             let idx = self.get_index(last_pos);
             self.cell_vec[idx] = cell::Cell::Null;
-            self.snake.body_pos_vec.pop();
+            match self.snake.body_pos_vec.pop(){
+                Some(pos_obj) => {update_instance.old_tail_end_pos =pos_obj; update_instance.is_otep_set = true;},
+                None => unimplemented!(),
+            };
+
+
         }
         else{
-         self.generate_new_candy();
+         update_instance.is_ncp_set = true;
+         update_instance.new_candy_pos = self.generate_new_candy();
+         ;
          self.score += 1;
             log!("{}", self.score);
 
+
         }
-        self.snake.move_next(self.width, self.length);
+
+        let new_head_pos = self.snake.move_next(self.width, self.length);
+
+        update_instance.is_nhp_set = true;
+        update_instance.new_head_pos = new_head_pos;
+
 
         //redraw the snake on cell_vec
         let mut flag = true;
@@ -120,6 +138,9 @@ impl Board{
 
 
         }
+        //log!("here {:?}", update_instance);
+        update_instance
+
         //log!("{:?}", self.candy_pos);
 
 
@@ -157,7 +178,7 @@ impl Board{
     pub fn is_snake_biting_candy(&self) -> bool{
         self.snake.is_biting_candy(self.candy_pos)
     }
-    pub fn generate_new_candy(&mut self){// somehow rand doesn't work all fine with wasm
+    pub fn generate_new_candy(&mut self) -> pos::Position{// somehow rand doesn't work all fine with wasm
         //let mut rng = rand::thread_rng();
         let mut x: u32 = (self.snake.head().x * self.snake.tailend().y ) % (self.length - 7);
         let mut y: u32 = (self.snake.head().y * self.snake.tailend().x)  %(self.width - 7);
@@ -171,6 +192,7 @@ impl Board{
         self.candy_pos = position;
         let idx = self.get_index(self.candy_pos);
         self.cell_vec[idx] = cell::Cell::Candy;
+        position
 
     }
 }
