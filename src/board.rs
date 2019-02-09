@@ -114,7 +114,6 @@ impl Board{
 
         }
         else{
-            log!("is biting");
          self.update_body.new_candy_pos_update = update::PositionUpdate::new( self.candy_pos, self.generate_new_candy());
 
          self.score += 1;
