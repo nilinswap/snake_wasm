@@ -2,27 +2,43 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 use pos;
+
+#[wasm_bindgen]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PositionUpdate{
+    pub old_position: pos::Position,
+    pub new_position: pos::Position,
+}
+
+impl PositionUpdate{
+    pub fn new(old_position: pos::Position, new_position: pos::Position) -> Self{
+        PositionUpdate{
+            old_position,
+            new_position,
+        }
+    }
+}
+
+
+
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Update{
-    pub is_nhp_set: bool,
-    pub new_head_pos: pos::Position,
-    pub is_otep_set: bool,
+    pub new_head_pos_update: PositionUpdate,
+
     pub old_tail_end_pos: pos::Position,
-    pub is_ncp_set: bool,
-    pub new_candy_pos: pos::Position
+
+    pub new_candy_pos_update: PositionUpdate
 
 }
 
 impl Update{
-    pub fn new() -> Self{
+    pub fn new(start_head_pos: pos::Position, start_tail_end_pos: pos::Position, start_candy_pos: pos::Position) -> Self{
         Update{
-            is_nhp_set: false,
-            new_head_pos: pos::Position{x:0, y:0},
-            is_otep_set: false,
-            old_tail_end_pos: pos::Position{x:0, y:0},
-            is_ncp_set: false,
-            new_candy_pos: pos::Position{x:0, y:0},
+
+            new_head_pos_update: PositionUpdate::new(start_head_pos, start_head_pos),
+            old_tail_end_pos: start_tail_end_pos,
+            new_candy_pos_update: PositionUpdate::new(start_candy_pos, start_candy_pos),
         }
     }
 

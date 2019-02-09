@@ -104,16 +104,101 @@ document.addEventListener('keydown', function(event){
 } );
 
 
+
+function updateBoard(){
+
+    const cellsPtr = board.cells();
+	const cells = new Uint8Array( memory.buffer, cellsPtr, width*length);
+    ctx.beginPath();
+
+    //console.log(board.update_body);
+    //remove tail end
+    var row = board.update_body.old_tail_end_pos.x;
+
+    var col = board.update_body.old_tail_end_pos.y;
+    cells[getIndex(row, col )] = 0;
+    ctx.fillStyle = NULL_COLOR;
+    ctx.fillRect(
+				col * (CELL_SIZE + 1) + 1,
+				row * (CELL_SIZE + 1) + 1,
+				CELL_SIZE,
+				CELL_SIZE
+			);
+
+
+
+
+    //mark candy
+	var old_row = board.update_body.new_candy_pos_update.old_position.x;
+    var old_col = board.update_body.new_candy_pos_update.old_position.y;
+    if (!cells[getIndex(row, col )])
+	    cells[getIndex(row, col )] = 0;
+    ctx.fillStyle = NULL_COLOR;
+    ctx.fillRect(
+				old_col * (CELL_SIZE + 1) + 1,
+				old_row * (CELL_SIZE + 1) + 1,
+				CELL_SIZE,
+				CELL_SIZE
+			);
+
+
+	var new_row = board.update_body.new_candy_pos_update.new_position.x;
+	var new_col = board.update_body.new_candy_pos_update.new_position.y;
+	cells[getIndex(row, col)] = 3;
+    ctx.fillStyle = CANDY_COLOR;
+    ctx.fillRect(
+				new_col * (CELL_SIZE + 1) + 1,
+				new_row * (CELL_SIZE + 1) + 1,
+				CELL_SIZE,
+				CELL_SIZE
+			);
+
+
+	//mark head
+	var old_row = board.update_body.new_head_pos_update.old_position.x;
+    var old_col = board.update_body.new_head_pos_update.old_position.y;
+	cells[getIndex(row, col )] = 1;
+    ctx.fillStyle = TAIL_COLOR;
+    ctx.fillRect(
+				old_col * (CELL_SIZE + 1) + 1,
+				old_row * (CELL_SIZE + 1) + 1,
+				CELL_SIZE,
+				CELL_SIZE
+			);
+
+
+	var new_row = board.update_body.new_head_pos_update.new_position.x;
+	var new_col = board.update_body.new_head_pos_update.new_position.y;
+	cells[getIndex(row, col )] = 2;
+    ctx.fillStyle = HEAD_COLOR;
+    ctx.fillRect(
+				new_col * (CELL_SIZE + 1) + 1,
+				new_row * (CELL_SIZE + 1) + 1,
+				CELL_SIZE,
+				CELL_SIZE
+			);
+
+
+
+}
+
+drawCells();
 var score_element = document.getElementById("score");
  const renderLoop = () => {
   //debugger;
 
+  updateBoard();
+  sleep(90);
+  if(board.tick()){
+    drawCells();
+  }
 
-  board.tick();
   //console.log(board.score());
     score_element.textContent = board.score();
-    //sleep(100);
-  drawCells();
+
+  //drawCells();
+  //updateBoard(update_obj);
+
 
    animationId = requestAnimationFrame(renderLoop);
 };

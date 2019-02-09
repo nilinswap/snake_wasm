@@ -86,12 +86,13 @@ impl Snake{
         }
     }
     pub fn is_biting_candy( &self, candy_pos: pos::Position) -> bool {
-        match self.direction{
+        /*match self.direction{
             Direction::Up    => (self.body_pos_vec[0].x - candy_pos.x ) == 1 && (candy_pos.y == self.body_pos_vec[0].y),
             Direction::Right => (candy_pos.x == self.body_pos_vec[0].x) && (candy_pos.y - self.body_pos_vec[0].y == 1),
             Direction::Down  => (candy_pos.x - self.body_pos_vec[0].x) == 1 && (candy_pos.y == self.body_pos_vec[0].y),
             Direction::Left => (candy_pos.x == self.body_pos_vec[0].x) && ( self.body_pos_vec[0].y - candy_pos.y == 1),
-        }
+        }*/
+        candy_pos == self.body_pos_vec[0]
     }
 
     pub fn head(&self) -> pos::Position{

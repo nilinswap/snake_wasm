@@ -27,6 +27,7 @@ pub struct Board{
     cell_vec: Vec< cell::Cell >,
     snake: snake::Snake,
     score: u64,
+    pub update_body: update::Update,
 }
 
 
@@ -50,6 +51,8 @@ impl Board{
 
         }
         vector[(candy_pos.x*width + candy_pos.y) as usize] = cell::Cell::Candy;
+        let update_body = update::Update::new(snake.body_pos_vec[0], *snake.body_pos_vec.last().unwrap(), candy_pos);
+        //log!("{:?}", snake.body_pos_vec.last());
         Board{
             width,
             length,
@@ -57,11 +60,11 @@ impl Board{
             cell_vec: vector,
             snake: snake,
             score: 0,
+            update_body,
         }
     }
-    pub fn tick(&mut self) -> update::Update{
-        let mut update_instance = update::Update::new();
-        //alert("here");
+    pub fn tick(&mut self) -> bool{
+
         if self.is_snake_biting_itself(){
 
             alert(&format!("game over!\nyour score: {}", self.score));
@@ -88,8 +91,11 @@ impl Board{
             self.cell_vec = vector;
             self.snake = snaKe;
             self.score= 0;
+            self.update_body = update::Update::new(self.snake.body_pos_vec[0], *self.snake.body_pos_vec.last().unwrap(), candy_pos);
+
             }
-            return update_instance;
+            return true;
+
 
         }
 
@@ -101,29 +107,30 @@ impl Board{
             let idx = self.get_index(last_pos);
             self.cell_vec[idx] = cell::Cell::Null;
             match self.snake.body_pos_vec.pop(){
-                Some(pos_obj) => {update_instance.old_tail_end_pos =pos_obj; update_instance.is_otep_set = true;},
+                Some(pos_obj) => self.update_body.old_tail_end_pos = pos_obj,
                 None => unimplemented!(),
             };
-
+            self.update_body.new_candy_pos_update = update::PositionUpdate::new( self.candy_pos, self.candy_pos);
 
         }
         else{
-         update_instance.is_ncp_set = true;
-         update_instance.new_candy_pos = self.generate_new_candy();
-         ;
+            log!("is biting");
+         self.update_body.new_candy_pos_update = update::PositionUpdate::new( self.candy_pos, self.generate_new_candy());
+
          self.score += 1;
             log!("{}", self.score);
 
 
         }
 
-        let new_head_pos = self.snake.move_next(self.width, self.length);
-
-        update_instance.is_nhp_set = true;
-        update_instance.new_head_pos = new_head_pos;
+        self.update_body.new_head_pos_update = update::PositionUpdate::new( self.snake.body_pos_vec[0], self.snake.move_next(self.width, self.length));
 
 
-        //redraw the snake on cell_vec
+
+
+
+
+        /*//redraw the snake on cell_vec
         let mut flag = true;
         for pos in &self.snake.body_pos_vec{
             let cloned_pos = pos.clone();
@@ -137,11 +144,13 @@ impl Board{
             }
 
 
-        }
-        //log!("here {:?}", update_instance);
-        update_instance
+        }*/
 
-        //log!("{:?}", self.candy_pos);
+        return false
+        //log!("here {:?}", update_instance);
+
+
+        //log!("{:?}", self.update_body);
 
 
     }
