@@ -2,4 +2,5 @@
 target/
 Cargo.lock/
 pkg/
-#www/node_modules/
+node_modules
+dist
