@@ -162,12 +162,12 @@ var score_element = document.getElementById("score");
 var count = 0;
 
 const renderLoop = () => {
-  //debugger;
+//   //debugger;
 
-    count += 1;
-    if (count < 20) {
-        return
-    }
+//     count += 1;
+//     if (count < 20) {
+//         return
+//     }
     count = 0;
 
   if(board.tick()){
