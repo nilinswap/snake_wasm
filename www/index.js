@@ -161,15 +161,14 @@ var score_element = document.getElementById("score");
 
 var count = 0;
 
-const renderLoop = () => {
-//   //debugger;
+function sleep(delay) {
+    return new Promise(resolve => setTimeout(resolve, delay));
+  }
 
-//     count += 1;
-//     if (count < 20) {
-//         return
-//     }
+const renderLoop = async () => {
+
     count = 0;
-
+    await sleep(90);
   if(board.tick()){
     drawCells();
   }
