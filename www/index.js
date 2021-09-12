@@ -1,4 +1,4 @@
-import {Board, Cell} from "snake-wasm";
+import {Board, Cell} from "snake-wasm/snake_wasm";
 import {memory} from "snake-wasm/snake_wasm_bg";
 
 

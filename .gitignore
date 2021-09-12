@@ -4,3 +4,5 @@ Cargo.lock/
 pkg/
 node_modules
 dist
+
+.DS_Store/
