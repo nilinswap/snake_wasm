@@ -1,4 +1,4 @@
-import {Board, Cell} from "snake-wasm";
+import {Board, Cell} from "snake-wasm/snake_wasm";
 import {memory} from "snake-wasm/snake_wasm_bg";
 
 
@@ -13,10 +13,6 @@ const CANDY_COLOR = "#FF0000";
 
 
 
-function sleep(delay) {
-        var start = new Date().getTime();
-        while (new Date().getTime() < start + delay);
-      }
 
 
 
@@ -162,11 +158,18 @@ function updateBoard(){
 
 drawCells();
 var score_element = document.getElementById("score");
- const renderLoop = () => {
+
+var count = 0;
+
+const renderLoop = () => {
   //debugger;
 
+    count += 1;
+    if (count < 20) {
+        return
+    }
+    count = 0;
 
-  sleep(90);
   if(board.tick()){
     drawCells();
   }
@@ -180,4 +183,14 @@ var score_element = document.getElementById("score");
 renderLoop();
 
 
+/*
 
+print("
+   |   |
+-----------
+   | o | x
+-----------
+   |   |
+")
+
+*/
